@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import Sequelize from 'sequelize';
 
-import { SongTO, GetSongTO } from './schema';
+import { SongTO, GetSongTO, DeleteSongTO } from './schema';
 import { SongsFactory, SongsAttributes } from '../../../plugins/db/models/songs';
 import { ServerResponse } from 'http';
 
@@ -10,9 +10,9 @@ export default fp((server, opts, next) => {
 
     server.post("/song/insert", { schema: SongTO }, (request, reply) => {
         try {
-            const { song, user } = request.body;
+            const { singer, song, user } = request.body;
             const query = `INSERT INTO [poc].[dbo].[songs] ([song], [singer], [createdDate], [createdBy], [lastUpdatedDate], [createdAt], [updatedAt])
-            VALUES('${song}', GETDATE(), '${user}', GETDATE(), GETDATE(), GETDATE())`;
+            VALUES('${song}', '${singer}', GETDATE(), '${user}', GETDATE(), GETDATE(), GETDATE())`;
 
             server.db.query(query, {
                 type: Sequelize.QueryTypes.INSERT
@@ -129,7 +129,7 @@ export default fp((server, opts, next) => {
         }
     });
 
-    server.post("/song/model/delete", { schema: SongTO }, (request, reply) => {
+    server.post("/song/model/delete", { schema: DeleteSongTO }, (request, reply) => {
         try {
             const { song } = request.body;
 

@@ -10,9 +10,9 @@ const songs_1 = require("../../../plugins/db/models/songs");
 exports.default = fastify_plugin_1.default((server, opts, next) => {
     server.post("/song/insert", { schema: schema_1.SongTO }, (request, reply) => {
         try {
-            const { song, user } = request.body;
+            const { singer, song, user } = request.body;
             const query = `INSERT INTO [poc].[dbo].[songs] ([song], [singer], [createdDate], [createdBy], [lastUpdatedDate], [createdAt], [updatedAt])
-            VALUES('${song}', GETDATE(), '${user}', GETDATE(), GETDATE(), GETDATE())`;
+            VALUES('${song}', '${singer}', GETDATE(), '${user}', GETDATE(), GETDATE(), GETDATE())`;
             server.db.query(query, {
                 type: sequelize_1.default.QueryTypes.INSERT
             }).then(data => {
@@ -117,7 +117,7 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             return reply.send(400);
         }
     });
-    server.post("/song/model/delete", { schema: schema_1.SongTO }, (request, reply) => {
+    server.post("/song/model/delete", { schema: schema_1.DeleteSongTO }, (request, reply) => {
         try {
             const { song } = request.body;
             const songDb = songs_1.SongsFactory(server.db);

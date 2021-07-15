@@ -98,6 +98,31 @@ export const SongTO = {
     }
 };
 
+export const DeleteSongTO = {
+    description: 'SongDetail',
+    tags: ['Song'],
+    summary: 'Song',
+    body: {
+        type: 'object',
+        properties: {
+            song: { type: 'string' },
+        }
+    },
+    response: {
+        200: {
+            description: 'Successful deleted',
+            type: 'object',
+            properties: {
+                success: { type: 'string' },
+                message: { type: 'string' },
+                data: {
+                    song: { type: 'string' },
+                }
+            }
+        }
+    }
+};
+
 export const GetSongTO = {
     description: 'SongDetail',
     tags: ['Song'],

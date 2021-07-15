@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetSongTO = exports.SongTO = exports.UserTO = exports.VerifyTokenTO = exports.LoginTO = void 0;
+exports.GetSongTO = exports.DeleteSongTO = exports.SongTO = exports.UserTO = exports.VerifyTokenTO = exports.LoginTO = void 0;
 exports.LoginTO = {
     description: 'Login',
     tags: ['auth'],
@@ -92,6 +92,30 @@ exports.SongTO = {
                     singer: { type: 'string' },
                     song: { type: 'string' },
                     createdBy: { type: 'string' },
+                }
+            }
+        }
+    }
+};
+exports.DeleteSongTO = {
+    description: 'SongDetail',
+    tags: ['Song'],
+    summary: 'Song',
+    body: {
+        type: 'object',
+        properties: {
+            song: { type: 'string' },
+        }
+    },
+    response: {
+        200: {
+            description: 'Successful deleted',
+            type: 'object',
+            properties: {
+                success: { type: 'string' },
+                message: { type: 'string' },
+                data: {
+                    song: { type: 'string' },
                 }
             }
         }
