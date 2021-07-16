@@ -1,7 +1,7 @@
 
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
-export interface UsersAttributes {
+export interface SongUsersAttributes {
     userId?: string;
     username: string;
     password: string;
@@ -11,8 +11,8 @@ export interface UsersAttributes {
     lastUpdatedBy?: string;
 }
 
-export interface UserModel extends Model<UsersAttributes>, UsersAttributes { }
-export class User extends Model<UserModel, UsersAttributes> { }
+export interface UserModel extends Model<SongUsersAttributes>, SongUsersAttributes { }
+export class User extends Model<UserModel, SongUsersAttributes> { }
 
 export type UserStatic = typeof Model & {
     new(values?: object, options?: BuildOptions): UserModel;
@@ -37,9 +37,9 @@ const users = {
 };
 
 
-export const UserFactory = (sequalize: Sequelize): UserStatic => {
+export const SongUsersFactory = (sequalize: Sequelize): UserStatic => {
     const attributes = users;
-    return <UserStatic>sequalize.define("Users", attributes, {
+    return <UserStatic>sequalize.define("SongUsers", attributes, {
         // don't add the timestamp attributes (updatedAt, createdAt)
         timestamps: true,
 

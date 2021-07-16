@@ -33,6 +33,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_plugin_1 = __importDefault(require("fastify-plugin"));
 const dbSequel = __importStar(require("sequelize"));
+const users_1 = require("./models/users");
 // import { UserFactory } from './models/users'
 // import { SkillsFactory } from './models/skill'
 const dbPlugin = ((server, opts, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,6 +89,8 @@ const dbPlugin = ((server, opts, next) => __awaiter(void 0, void 0, void 0, func
     });
     // const Songs = SongsFactory(dbSequelize);
     // await Songs.sync({ force: true });
+    const SongUsers = users_1.SongUsersFactory(dbSequelize);
+    yield SongUsers.sync({ force: true });
     // server.db.sync({ force: true });
 }));
 exports.default = fastify_plugin_1.default(dbPlugin);

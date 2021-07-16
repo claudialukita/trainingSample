@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import * as dbSequel from "sequelize";
 import { SkillsFactory } from './models/skill';
-import { SongsFactory } from './models/songs';
+import { SongUsersFactory } from './models/users';
 
 // import { UserFactory } from './models/users'
 // import { SkillsFactory } from './models/skill'
@@ -70,6 +70,9 @@ const dbPlugin = (async (server, opts, next) => {
     // const Songs = SongsFactory(dbSequelize);
     // await Songs.sync({ force: true });
     
+    const SongUsers = SongUsersFactory(dbSequelize);
+    await SongUsers.sync({ force: true });
+
     // server.db.sync({ force: true });
 
 });

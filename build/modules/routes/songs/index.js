@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_plugin_1 = __importDefault(require("fastify-plugin"));
 const sequelize_1 = __importDefault(require("sequelize"));
 const schema_1 = require("./schema");
+// import { SongUsersFactory, SongUsersAttributes } from '../../../plugins/db/models/users';
 const songs_1 = require("../../../plugins/db/models/songs");
+const songsService_1 = require("../../../services/songsService");
 exports.default = fastify_plugin_1.default((server, opts, next) => {
     server.post("/song/insert", { schema: schema_1.SongTO }, (request, reply) => {
         try {
@@ -42,90 +44,81 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
     });
     server.post("/song/model/insert", { schema: schema_1.SongTO }, (request, reply) => {
         try {
+            const songsService = new songsService_1.SongsService(server.db);
             const { singer, song, user } = request.body;
-            const userDb = songs_1.SongsFactory(server.db);
-            userDb.create({ singer, song, createdBy: user })
-                .then(data => {
+            songsService.insert(request.body).then(data => {
                 return reply.code(200).send({
                     success: true,
                     message: 'Insert successful!',
-                    data: { singer: data.singer, song: data.song, createdBy: data.createdBy }
+                    data //: { singer: data.singer, song: data.song, createdBy: data.createdBy }
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error in insert new record',
-                    err: [{ name: err.name, method: request.routerMethod, path: request.routerPath, param: request.body }],
-                    // data: err,
+                    // err//: [{name: err.name, method: request.routerMethod, path: request.routerPath, param: request.body}],
+                    data: err,
                 });
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
     });
     server.post("/song/model/update", { schema: schema_1.SongTO }, (request, reply) => {
         try {
-            const { song, singer, user } = request.body;
-            const songDb = songs_1.SongsFactory(server.db);
-            songDb.update({ singer, LastUpdatedBy: user }, {
-                where: {
-                    song: song
-                }
-            }).then(data => {
+            const songsService = new songsService_1.SongsService(server.db);
+            const { singer, song, user } = request.body;
+            songsService.update(request.body).then(data => {
                 return reply.code(200).send({
                     success: true,
                     message: 'Update successful!',
                     data
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error updating record',
-                    // data: err,
-                    err: [{ name: err.name, method: request.routerMethod, path: request.routerPath, param: request.body }],
+                    data: err,
+                    // err: [{name: err.name, method: request.routerMethod, path: request.routerPath, param: request.body}],
                 });
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
     });
     server.post("/song/model/delete", { schema: schema_1.DeleteSongTO }, (request, reply) => {
         try {
+            const songsService = new songsService_1.SongsService(server.db);
             const { song } = request.body;
-            const songDb = songs_1.SongsFactory(server.db);
-            songDb.destroy({
-                where: {
-                    song: song
-                }
-            }).then(data => {
+            songsService.destroy(request.body).then(data => {
                 return reply.code(200).send({
                     success: true,
                     message: 'Delete successful!',
@@ -146,12 +139,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }

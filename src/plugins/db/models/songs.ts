@@ -27,3 +27,4 @@ export function SongsFactory(sequelize: Sequelize): SongsStatic {
         LastUpdatedBy: { type: DataTypes.STRING, allowNull: true },
     });
 }
+

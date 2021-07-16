@@ -36,20 +36,29 @@ const fastify_1 = require("fastify");
 const fastify_blipp_1 = __importDefault(require("fastify-blipp"));
 const fastify_swagger_1 = __importDefault(require("fastify-swagger"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
+const elastic_apm_node_1 = __importDefault(require("elastic-apm-node"));
 const path = __importStar(require("path"));
 const dotenv = __importStar(require("dotenv"));
 // import { swagger } from "./config/index";
 const db_1 = __importDefault(require("./plugins/db"));
+const kafka_1 = __importDefault(require("./plugins/kafka"));
 dotenv.config({
     path: path.resolve('.env'),
 });
 const port = process.env.PORT;
+const apmUrl = process.env.APM_URL;
 const dbDialect = process.env.DB_DIALECT;
 const db = process.env.DB;
 const dbHost = process.env.DB_HOST;
 const dbPort = process.env.DB_PORT;
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
+const kafkaHost = process.env.KAFKA_HOST;
+var apm = elastic_apm_node_1.default.start({
+    serviceName: 'apm-server-try',
+    serverUrl: apmUrl,
+    environment: 'development'
+});
 const createServer = () => new Promise((resolve, reject) => {
     const server = fastify_1.fastify({
         ignoreTrailingSlash: true,
@@ -92,13 +101,30 @@ const createServer = () => new Promise((resolve, reject) => {
     server.register(fastify_autoload_1.default, {
         dir: path.join(__dirname, 'modules/routes')
     });
-    server.get('/', (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
-        return {
-            hello: 'world'
-        };
-    }));
-    server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword });
+    // server.get('/', async (request, reply) => {
+    //    return {
+    //       hello: 'world'
+    //    };
+    // });
+    server.decorate('apm', elastic_apm_node_1.default);
+    server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost });
     server.register(db_1.default);
+    server.register(kafka_1.default);
+    server.addHook('onRequest', (request, reply, error) => __awaiter(void 0, void 0, void 0, function* () {
+        apm.setTransactionName(request.method + ' ' + request.url);
+    }));
+    // global hook error handling for unhandled error
+    server.addHook('onError', (request, reply, error) => __awaiter(void 0, void 0, void 0, function* () {
+        const { message, stack } = error;
+        let err = {
+            method: request.routerMethod,
+            path: request.routerPath,
+            param: request.body,
+            message,
+            stack
+        };
+        apm.captureError(JSON.stringify(err));
+    }));
     const start = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield server.listen(port);

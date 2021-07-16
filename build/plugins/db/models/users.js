@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserFactory = exports.User = void 0;
+exports.SongUsersFactory = exports.User = void 0;
 const sequelize_1 = require("sequelize");
 class User extends sequelize_1.Model {
 }
@@ -22,9 +22,9 @@ const users = {
     LastUpdatedDate: { type: sequelize_1.DataTypes.DATE, defaultValue: sequelize_1.DataTypes.NOW, allowNull: true },
     LastUpdatedBy: { type: sequelize_1.DataTypes.STRING, allowNull: true },
 };
-const UserFactory = (sequalize) => {
+const SongUsersFactory = (sequalize) => {
     const attributes = users;
-    return sequalize.define("Users", attributes, {
+    return sequalize.define("SongUsers", attributes, {
         // don't add the timestamp attributes (updatedAt, createdAt)
         timestamps: true,
         // If don't want createdAt
@@ -33,5 +33,5 @@ const UserFactory = (sequalize) => {
         updatedAt: false,
     });
 };
-exports.UserFactory = UserFactory;
+exports.SongUsersFactory = SongUsersFactory;
 //# sourceMappingURL=users.js.map
