@@ -1,4 +1,4 @@
-import { SongsFactory } from '../plugins/db/models/songs';
+import { SongsFactory } from '../../plugins/db/models/songs';
 
 export class SongsService {
    

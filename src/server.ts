@@ -2,7 +2,7 @@ import { fastify } from 'fastify';
 import fastifyBlipp from "fastify-blipp";
 import fastifySwagger from "fastify-swagger";
 import AutoLoad from "fastify-autoload";
-import apmServer from 'elastic-apm-node';
+// import apmServer from 'elastic-apm-node';
 
 import * as path from "path";
 import * as dotenv from 'dotenv';
@@ -26,12 +26,12 @@ const dbUsername: string = process.env.DB_USERNAME;
 const dbPassword: string = process.env.DB_PASSWORD;
 const kafkaHost: string = process.env.KAFKA_HOST;
 
-var apm = apmServer.start({
-   serviceName: 'apm-server-try',
+// var apm = apmServer.start({
+//    serviceName: 'apm-server-try',
 
-   serverUrl: apmUrl,
-   environment: 'development'
-});
+//    serverUrl: apmUrl,
+//    environment: 'development'
+// });
 export const createServer = () => new Promise((resolve, reject) => {
 
    const server = fastify({
@@ -78,22 +78,16 @@ export const createServer = () => new Promise((resolve, reject) => {
       dir: path.join(__dirname, 'modules/routes')
    });
 
-   // server.get('/', async (request, reply) => {
-   //    return {
-   //       hello: 'world'
-   //    };
-   // });
-
-   server.decorate('apm', apmServer);
+   // server.decorate('apm', apm);
 
    server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost });
 
    server.register(dbPlugin);
    server.register(kafkaPlugin);
 
-   server.addHook('onRequest', async (request, reply, error) => {
-      apm.setTransactionName(request.method + ' ' + request.url);
-  });
+//    server.addHook('onRequest', async (request, reply, error) => {
+//       apm.setTransactionName(request.method + ' ' + request.url);
+//   });
 
   // global hook error handling for unhandled error
   server.addHook('onError', async (request, reply, error) => {
@@ -107,7 +101,7 @@ export const createServer = () => new Promise((resolve, reject) => {
           stack
       };
 
-      apm.captureError(JSON.stringify(err));
+      // apm.captureError(JSON.stringify(err));
   });
 
    const start = async () => {

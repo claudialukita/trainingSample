@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTopic = exports.publish = void 0;
+exports.createTopic2 = exports.createTopic = exports.publish = void 0;
 const kafka_node_1 = require("kafka-node");
 const config_1 = require("./config");
 /**
@@ -60,4 +60,25 @@ const createTopic = (client, topic) => new Promise((resolve, rejects) => {
     });
 });
 exports.createTopic = createTopic;
+const createTopic2 = (server, topic) => new Promise((resolve, rejects) => {
+    const client = new kafka_node_1.KafkaClient(config_1.kafkaConfig(server));
+    const producer = new kafka_node_1.Producer(client);
+    // First wait for the producer to be initialized
+    // producer.on('ready', () => {
+    console.log(`Create topic ${topic}`);
+    producer.createTopics(topic, (error, data) => {
+        console.log(error || data);
+        if (data) {
+            resolve(data);
+        }
+        if (error) {
+            rejects(error);
+        }
+    });
+    // });
+    producer.on('error', (err) => {
+        rejects(err);
+    });
+});
+exports.createTopic2 = createTopic2;
 //# sourceMappingURL=producer.js.map

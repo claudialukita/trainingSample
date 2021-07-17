@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongsService = void 0;
-const songs_1 = require("../plugins/db/models/songs");
+const songs_1 = require("../../plugins/db/models/songs");
 class SongsService {
     constructor(db) {
         this.insert = (param) => new Promise((resolve, reject) => {

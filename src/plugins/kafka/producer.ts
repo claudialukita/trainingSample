@@ -66,3 +66,27 @@ export const createTopic = (client: KafkaClient, topic: [string]) => new Promise
         rejects(err);
     });
 });
+
+export const createTopic2 = (server: any, topic: [string]) => new Promise((resolve, rejects) => {
+
+    const client = new KafkaClient(kafkaConfig(server));
+    const producer = new Producer(client);
+    // First wait for the producer to be initialized
+    // producer.on('ready', () => {
+        console.log(`Create topic ${topic}`);
+        producer.createTopics(topic, (error, data) => {
+            console.log(error || data);
+
+            if (data) {
+                resolve(data);
+            }
+            if (error) {
+                rejects(error);
+            }
+        });
+    // });
+
+    producer.on('error', (err: Error): void => {
+        rejects(err);
+    });
+});

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_plugin_1 = __importDefault(require("fastify-plugin"));
 const schema_1 = require("./schema");
 const consumer_1 = require("../../../plugins/kafka/consumer");
-const producer_1 = require("../../../plugins/kafka/producer");
+const kafkaService_1 = require("../../../modules/services/kafkaService");
 exports.default = fastify_plugin_1.default((server, opts, next) => {
     server.post("/kafka/subscribe", { schema: schema_1.SubscribeKafkaTO }, (request, reply) => {
         try {
@@ -14,6 +14,7 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             let count = 0;
             let data = [];
             consumer_1.kafkaSubscribe(server, topic, (messages) => {
+                console.log(messages);
                 count++;
                 data.push(messages);
                 if (count == messages.highWaterOffset) {
@@ -26,53 +27,53 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            server.apm.captureError({
-                method: request.routerMethod,
-                path: request.routerPath,
-                param: request.body,
-                error,
-            });
+            //    server.apm.captureError({
+            //        method: request.routerMethod,
+            //        path: request.routerPath,
+            //        param: request.body,
+            //        error,
+            //    })
             request.log.error(error);
             return reply.send(400);
         }
     });
     server.post("/kafka/publish", { schema: schema_1.PublishKafkaTO }, (request, reply) => {
-        const { topic, messages } = request.body;
-        producer_1.publish(server, topic, messages).then((response) => {
+        const kafkaService = new kafkaService_1.KafkaService(server);
+        kafkaService.publishToTopic(request.body).then((response) => {
             return reply.code(200).send({
                 success: true,
                 message: 'Send message successful!',
                 data: response
             });
         }).catch((error) => {
-            server.apm.captureError(JSON.stringify({
-                method: request.routerMethod,
-                path: request.routerPath,
-                param: request.body,
-                error,
-            }));
+            //   server.apm.captureError(JSON.stringify({
+            //       method: request.routerMethod,
+            //       path: request.routerPath,
+            //       param: request.body,
+            //       error,
+            //   }))
             return reply.code(400).send({
                 success: true,
                 message: 'Send message failed!',
-                data: [error, messages]
+                data: [error]
             });
         });
     });
     server.post("/kafka/createTopic", { schema: schema_1.TopicKafkaTO }, (request, reply) => {
-        const { topics } = request.body;
-        producer_1.createTopic(server.kafkaClient, topics).then((response) => {
+        const kafkaService = new kafkaService_1.KafkaService(server);
+        kafkaService.creatingTopic(request.body).then((response) => {
             return reply.code(200).send({
                 success: true,
                 message: 'Create topic successful!',
                 data: response
             });
         }).catch((error) => {
-            server.apm.captureError({
-                method: request.routerMethod,
-                path: request.routerPath,
-                param: request.body,
-                error,
-            });
+            //   server.apm.captureError({
+            //       method: request.routerMethod,
+            //       path: request.routerPath,
+            //       param: request.body,
+            //       error,
+            //   })
             return reply.code(400).send({
                 success: true,
                 message: 'Create topic failed!',

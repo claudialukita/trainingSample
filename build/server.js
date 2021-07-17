@@ -36,7 +36,7 @@ const fastify_1 = require("fastify");
 const fastify_blipp_1 = __importDefault(require("fastify-blipp"));
 const fastify_swagger_1 = __importDefault(require("fastify-swagger"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
-const elastic_apm_node_1 = __importDefault(require("elastic-apm-node"));
+// import apmServer from 'elastic-apm-node';
 const path = __importStar(require("path"));
 const dotenv = __importStar(require("dotenv"));
 // import { swagger } from "./config/index";
@@ -54,11 +54,11 @@ const dbPort = process.env.DB_PORT;
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const kafkaHost = process.env.KAFKA_HOST;
-var apm = elastic_apm_node_1.default.start({
-    serviceName: 'apm-server-try',
-    serverUrl: apmUrl,
-    environment: 'development'
-});
+// var apm = apmServer.start({
+//    serviceName: 'apm-server-try',
+//    serverUrl: apmUrl,
+//    environment: 'development'
+// });
 const createServer = () => new Promise((resolve, reject) => {
     const server = fastify_1.fastify({
         ignoreTrailingSlash: true,
@@ -101,18 +101,13 @@ const createServer = () => new Promise((resolve, reject) => {
     server.register(fastify_autoload_1.default, {
         dir: path.join(__dirname, 'modules/routes')
     });
-    // server.get('/', async (request, reply) => {
-    //    return {
-    //       hello: 'world'
-    //    };
-    // });
-    server.decorate('apm', elastic_apm_node_1.default);
+    // server.decorate('apm', apm);
     server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost });
     server.register(db_1.default);
     server.register(kafka_1.default);
-    server.addHook('onRequest', (request, reply, error) => __awaiter(void 0, void 0, void 0, function* () {
-        apm.setTransactionName(request.method + ' ' + request.url);
-    }));
+    //    server.addHook('onRequest', async (request, reply, error) => {
+    //       apm.setTransactionName(request.method + ' ' + request.url);
+    //   });
     // global hook error handling for unhandled error
     server.addHook('onError', (request, reply, error) => __awaiter(void 0, void 0, void 0, function* () {
         const { message, stack } = error;
@@ -123,7 +118,7 @@ const createServer = () => new Promise((resolve, reject) => {
             message,
             stack
         };
-        apm.captureError(JSON.stringify(err));
+        // apm.captureError(JSON.stringify(err));
     }));
     const start = () => __awaiter(void 0, void 0, void 0, function* () {
         try {

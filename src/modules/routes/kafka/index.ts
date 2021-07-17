@@ -3,8 +3,7 @@ import fp from 'fastify-plugin';
 
 import { PublishKafkaTO, SubscribeKafkaTO, TopicKafkaTO } from './schema';
 import { kafkaSubscribe } from '../../../plugins/kafka/consumer';
-import { createTopic, publish } from '../../../plugins/kafka/producer';
-import { notDeepStrictEqual } from 'assert';
+import { KafkaService } from '../../../modules/services/kafkaService';
 
 export default fp((server, opts, next) => {
 
@@ -16,6 +15,7 @@ export default fp((server, opts, next) => {
            let data = [];
 
            kafkaSubscribe(server, topic, (messages) => {
+               console.log(messages);
                count++;
                data.push(messages);
 
@@ -29,68 +29,69 @@ export default fp((server, opts, next) => {
            });
 
        } catch (error) {
-           server.apm.captureError({
-               method: request.routerMethod,
-               path: request.routerPath,
-               param: request.body,
-               error,
-           })
+        //    server.apm.captureError({
+        //        method: request.routerMethod,
+        //        path: request.routerPath,
+        //        param: request.body,
+        //        error,
+        //    })
 
            request.log.error(error);
            return reply.send(400);
        }
    });
 
-   server.post("/kafka/publish", { schema: PublishKafkaTO }, (request, reply) => {
-      const { topic, messages } = request.body;
+  server.post("/kafka/publish", { schema: PublishKafkaTO }, (request, reply) => {
 
-      publish(server, topic, messages).then((response) => {
-          return reply.code(200).send({
-              success: true,
-              message: 'Send message successful!',
-              data: response
-          });
-      }).catch((error) => {
-          server.apm.captureError(JSON.stringify({
-              method: request.routerMethod,
-              path: request.routerPath,
-              param: request.body,
-              error,
-          }))
+    const kafkaService = new KafkaService(server);
 
-          return reply.code(400).send({
-              success: true,
-              message: 'Send message failed!',
-              data: [error, messages]
-          });
-      });
-  });
+    kafkaService.publishToTopic(request.body).then((response) => {
+        return reply.code(200).send({
+            success: true,
+            message: 'Send message successful!',
+            data: response
+        });
+    }).catch((error) => {
+      //   server.apm.captureError(JSON.stringify({
+      //       method: request.routerMethod,
+      //       path: request.routerPath,
+      //       param: request.body,
+      //       error,
+      //   }))
+
+        return reply.code(400).send({
+            success: true,
+            message: 'Send message failed!',
+            data: [error]
+        });
+    });
+});
 
   server.post("/kafka/createTopic", { schema: TopicKafkaTO }, (request, reply) => {
-      const { topics } = request.body;
+    
+    const kafkaService = new KafkaService(server);
 
-      createTopic(server.kafkaClient, topics).then((response) => {
-          return reply.code(200).send({
-              success: true,
-              message: 'Create topic successful!',
-              data: response
-          });
-      }).catch((error) => {
+    kafkaService.creatingTopic(request.body).then((response) => {
+        return reply.code(200).send({
+            success: true,
+            message: 'Create topic successful!',
+            data: response
+        });
+    }).catch((error) => {
 
-          server.apm.captureError({
-              method: request.routerMethod,
-              path: request.routerPath,
-              param: request.body,
-              error,
-          })
+      //   server.apm.captureError({
+      //       method: request.routerMethod,
+      //       path: request.routerPath,
+      //       param: request.body,
+      //       error,
+      //   })
 
-          return reply.code(400).send({
-              success: true,
-              message: 'Create topic failed!',
-              data: error
-          });
-      });
-  });
-
+        return reply.code(400).send({
+            success: true,
+            message: 'Create topic failed!',
+            data: error
+        });
+    });
+});
    next();
 });

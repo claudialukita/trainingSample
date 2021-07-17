@@ -46,7 +46,7 @@ const dbPlugin = (async (server, opts, next) => {
                     stack
                 };
 
-                server.apm.captureError(JSON.stringify(err));
+                // server.apm.captureError(JSON.stringify(err));
                 done()
             });
     });
@@ -58,12 +58,12 @@ const dbPlugin = (async (server, opts, next) => {
             server.log.info('Database Connection has been established successfully.');
         })
         .catch(err => {
-            // console.log(err);
-            server.apm.err({
-                method: "Connecting to database",
-                error: err,
-            })
+            // server.apm.err({
+            //     method: "Connecting to database",
+            //     error: err,
+            // })
 
+            console.log(err);
             server.log.error('Unable to connect to the database:', err);
         });
 
