@@ -11,8 +11,8 @@ createServer()
         server.log.info('Kafka Client Connection has been established successfully.');
 
         // running kafka monitor
-      //   const kafkaService = new KafkaService(server);
-      //   kafkaService.subscribeTopicSongs();
+        const kafkaService = new KafkaService(server);
+        kafkaService.subscribeTopicSaveDb();
     });
 
     server.kafkaClient.on('error', (err) => {

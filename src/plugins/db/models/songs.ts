@@ -22,8 +22,8 @@ export function SongsFactory(sequelize: Sequelize): SongsStatic {
         song: { type: DataTypes.STRING, allowNull: false, unique: true },
         singer: { type: DataTypes.STRING, allowNull: false, unique: true },
         createdDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: false },
-        createdBy: { type: DataTypes.STRING, allowNull: false },
-        LastUpdatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, allowNull: true },
+        createdBy: { type: DataTypes.STRING, allowNull: true },
+        LastUpdatedDate: { type: DataTypes.DATE, allowNull: true },
         LastUpdatedBy: { type: DataTypes.STRING, allowNull: true },
     });
 }

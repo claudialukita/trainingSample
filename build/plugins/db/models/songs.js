@@ -11,8 +11,8 @@ function SongsFactory(sequelize) {
         song: { type: sequelize_1.DataTypes.STRING, allowNull: false, unique: true },
         singer: { type: sequelize_1.DataTypes.STRING, allowNull: false, unique: true },
         createdDate: { type: sequelize_1.DataTypes.DATE, defaultValue: sequelize_1.DataTypes.NOW, allowNull: false },
-        createdBy: { type: sequelize_1.DataTypes.STRING, allowNull: false },
-        LastUpdatedDate: { type: sequelize_1.DataTypes.DATE, defaultValue: sequelize_1.DataTypes.NOW, allowNull: true },
+        createdBy: { type: sequelize_1.DataTypes.STRING, allowNull: true },
+        LastUpdatedDate: { type: sequelize_1.DataTypes.DATE, allowNull: true },
         LastUpdatedBy: { type: sequelize_1.DataTypes.STRING, allowNull: true },
     });
 }

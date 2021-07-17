@@ -37,6 +37,24 @@ class SongsService {
                 reject(err);
             });
         });
+        this.specificSelect = (param) => new Promise((resolve, reject) => {
+            const { singer, song, user } = param;
+            this.songsModel.findOne({
+                where: {
+                    song: song
+                }
+            }).then(data => {
+                if (data !== null) {
+                    resolve('Song already in DB');
+                }
+                else {
+                    resolve(true);
+                    this.insert({ singer, song, user });
+                }
+            }).catch(err => {
+                reject(err);
+            });
+        });
         this.db = db;
         this.songsModel = songs_1.SongsFactory(this.db);
     }

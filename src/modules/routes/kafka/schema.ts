@@ -32,6 +32,47 @@ export const PublishKafkaTO = {
     }
 }
 
+export const PublishJSONKafkaTO = {
+    description: 'kafka',
+    tags: ['kafka'],
+    summary: 'Kafka',
+    body: {
+        type: 'object',
+        properties: {
+            topic: { type: 'string' },
+            messages: {
+                type: 'object',
+                properties: {
+                    singer: { type: 'string' },
+                    song: { type: 'string' },
+                    user: { type: 'string' },
+                }
+            },
+        }
+    },
+    response: {
+        200: {
+            description: 'Successful response',
+            type: 'object',
+            properties: {
+                success: { type: 'string' },
+                message: { type: 'string' },
+                data: {
+                    type: 'object',
+                    properties: {
+                        topic: {
+                            type: 'object',
+                            properties: {
+                                0: { type: 'string' },
+                            }
+                        },
+                    }
+                }
+            }
+        }
+    }
+}
+
 export const TopicKafkaTO = {
     description: 'kafka',
     tags: ['kafka'],

@@ -1,3 +1,4 @@
+import { nextTick } from 'process';
 import { SongsFactory } from '../../plugins/db/models/songs';
 
 export class SongsService {
@@ -45,6 +46,25 @@ export class SongsService {
          }
       }).then(data => {
          resolve(data.song);
+      }).catch(err => {
+         reject(err);
+      });
+   });
+
+   specificSelect = (param) => new Promise((resolve, reject) => {
+      const { singer, song, user } = param;
+
+      this.songsModel.findOne({
+         where: {
+            song: song
+         }
+      }).then(data => {
+         if (data !== null) {
+             resolve('Song already in DB');
+         } else {
+             resolve(true);
+             this.insert({ singer, song, user });
+         }
       }).catch(err => {
          reject(err);
       });

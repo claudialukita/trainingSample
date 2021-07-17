@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
+const kafkaService_1 = require("./modules/services/kafkaService");
 server_1.createServer()
     .then((server) => {
     server.log.info('Server started.');
     server.kafkaClient.on('ready', () => {
         server.log.info('Kafka Client Connection has been established successfully.');
         // running kafka monitor
-        //   const kafkaService = new KafkaService(server);
-        //   kafkaService.subscribeTopicSongs();
+        const kafkaService = new kafkaService_1.KafkaService(server);
+        kafkaService.subscribeTopicSaveDb();
     });
     server.kafkaClient.on('error', (err) => {
         server.log.info('Server not connected to Kafka');

@@ -13,32 +13,32 @@ export const publish = (server: any, topic: string, message: string) => new Prom
         const client = new KafkaClient(kafkaConfig(server));
         const producer = new Producer(client);
 
-    // First wait for the producer to be initialized
-    producer.on('ready', (): void => {
-        // Update metadata for the topic we'd like to publish to
-        client.refreshMetadata([topic], (err: Error): void => {
-            if (err) {
-                // throw err;
-                rejects(err);
-            }
-
-            console.log(`Sending message to ${topic}: ${message}`);
-            producer.send([{ topic, messages: [message] }], (error: Error, result: ProduceRequest): void => {
-                console.log(error || result);
-
-                if (result) { 
-                    resolve(result);
+        // First wait for the producer to be initialized
+        producer.on('ready', (): void => {
+            // Update metadata for the topic we'd like to publish to
+            client.refreshMetadata([topic], (err: Error): void => {
+                if (err) {
+                    // throw err;
+                    rejects(err);
                 }
-                if (error) {
-                    rejects(error);
-                }
+
+                console.log(`Sending message to ${topic}: ${message}`);
+                producer.send([{ topic, messages: [message] }], (error: Error, result: ProduceRequest): void => {
+                    console.log(error || result);
+
+                    if (result) { 
+                        resolve(result);
+                    }
+                    if (error) {
+                        rejects(error);
+                    }
+                });
             });
         });
-    });
 
-    producer.on('error', (err: Error): void => {
-        rejects(err);
-    });
+        producer.on('error', (err: Error): void => {
+            rejects(err);
+        });
 } catch (err){
     console.log(err);
 }

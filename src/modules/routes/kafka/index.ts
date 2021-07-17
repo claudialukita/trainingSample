@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 
 
-import { PublishKafkaTO, SubscribeKafkaTO, TopicKafkaTO } from './schema';
+import { PublishKafkaTO, PublishJSONKafkaTO, SubscribeKafkaTO, TopicKafkaTO } from './schema';
 import { kafkaSubscribe } from '../../../plugins/kafka/consumer';
 import { KafkaService } from '../../../modules/services/kafkaService';
 
@@ -15,7 +15,6 @@ export default fp((server, opts, next) => {
            let data = [];
 
            kafkaSubscribe(server, topic, (messages) => {
-               console.log(messages);
                count++;
                data.push(messages);
 
@@ -65,7 +64,33 @@ export default fp((server, opts, next) => {
             data: [error]
         });
     });
-});
+  });
+
+  server.post("/kafka/publish/json", { schema: PublishJSONKafkaTO }, (request, reply) => {
+
+    const kafkaService = new KafkaService(server);
+
+    kafkaService.publishJSONToTopic(request.body).then((response) => {
+        return reply.code(200).send({
+            success: true,
+            message: 'Send message successful!',
+            data: response
+        });
+    }).catch((error) => {
+      //   server.apm.captureError(JSON.stringify({
+      //       method: request.routerMethod,
+      //       path: request.routerPath,
+      //       param: request.body,
+      //       error,
+      //   }))
+
+        return reply.code(400).send({
+            success: true,
+            message: 'Send message failed!',
+            data: [error]
+        });
+    });
+  });
 
   server.post("/kafka/createTopic", { schema: TopicKafkaTO }, (request, reply) => {
     

@@ -14,7 +14,6 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             let count = 0;
             let data = [];
             consumer_1.kafkaSubscribe(server, topic, (messages) => {
-                console.log(messages);
                 count++;
                 data.push(messages);
                 if (count == messages.highWaterOffset) {
@@ -40,6 +39,28 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
     server.post("/kafka/publish", { schema: schema_1.PublishKafkaTO }, (request, reply) => {
         const kafkaService = new kafkaService_1.KafkaService(server);
         kafkaService.publishToTopic(request.body).then((response) => {
+            return reply.code(200).send({
+                success: true,
+                message: 'Send message successful!',
+                data: response
+            });
+        }).catch((error) => {
+            //   server.apm.captureError(JSON.stringify({
+            //       method: request.routerMethod,
+            //       path: request.routerPath,
+            //       param: request.body,
+            //       error,
+            //   }))
+            return reply.code(400).send({
+                success: true,
+                message: 'Send message failed!',
+                data: [error]
+            });
+        });
+    });
+    server.post("/kafka/publish/json", { schema: schema_1.PublishJSONKafkaTO }, (request, reply) => {
+        const kafkaService = new kafkaService_1.KafkaService(server);
+        kafkaService.publishJSONToTopic(request.body).then((response) => {
             return reply.code(200).send({
                 success: true,
                 message: 'Send message successful!',
