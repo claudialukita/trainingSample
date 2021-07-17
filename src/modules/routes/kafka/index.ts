@@ -15,7 +15,7 @@ export default fp((server, opts, next) => {
            let count = 0;
            let data = [];
 
-           kafkaSubscribe(server.kafkaClient, topic, (messages) => {
+           kafkaSubscribe(server, topic, (messages) => {
                count++;
                data.push(messages);
 
@@ -44,7 +44,7 @@ export default fp((server, opts, next) => {
    server.post("/kafka/publish", { schema: PublishKafkaTO }, (request, reply) => {
       const { topic, messages } = request.body;
 
-      publish(server.kafkaClient, topic, messages).then((response) => {
+      publish(server, topic, messages).then((response) => {
           return reply.code(200).send({
               success: true,
               message: 'Send message successful!',

@@ -1,12 +1,14 @@
-import { KafkaClient as Client, Consumer, Message, Offset, OffsetFetchRequest, ConsumerOptions, KafkaClientOptions } from 'kafka-node';
+import { KafkaClient as Client, Consumer, Message, Offset, OffsetFetchRequest, ConsumerOptions, KafkaClientOptions, KafkaClient } from 'kafka-node';
+import { kafkaConfig } from './config';
 /**
  * Kafka Consumer
  */
 
-export const kafkaSubscribe = (client: Client, topic: string, send: (message: Message) => void) => {
+export const kafkaSubscribe = (server: any, topic: string, send: (message: Message) => void) => {
     const topics: OffsetFetchRequest[] = [{ topic: topic, partition: 0 }];
     const options: ConsumerOptions = { autoCommit: false, fetchMaxWaitMs: 1000, fetchMaxBytes: 1024 * 1024 };
 
+    const client = new KafkaClient(kafkaConfig(server));
     const consumer = new Consumer(client, topics, options);
 
     consumer.on('error', (err) => {

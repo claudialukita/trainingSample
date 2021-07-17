@@ -19,7 +19,17 @@ exports.PublishKafkaTO = {
             properties: {
                 success: { type: 'string' },
                 message: { type: 'string' },
-                data: { type: 'string' }
+                data: {
+                    type: 'object',
+                    properties: {
+                        topic: {
+                            type: 'object',
+                            properties: {
+                                0: { type: 'string' },
+                            }
+                        },
+                    }
+                }
             }
         }
     }

@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.kafkaSubscribe = void 0;
 const kafka_node_1 = require("kafka-node");
+const config_1 = require("./config");
 /**
  * Kafka Consumer
  */
-const kafkaSubscribe = (client, topic, send) => {
+const kafkaSubscribe = (server, topic, send) => {
     const topics = [{ topic: topic, partition: 0 }];
     const options = { autoCommit: false, fetchMaxWaitMs: 1000, fetchMaxBytes: 1024 * 1024 };
+    const client = new kafka_node_1.KafkaClient(config_1.kafkaConfig(server));
     const consumer = new kafka_node_1.Consumer(client, topics, options);
     consumer.on('error', (err) => {
         console.log('error', err);

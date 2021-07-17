@@ -9,6 +9,7 @@ export const publish = (server: any, topic: string, message: string) => new Prom
     // The producer handles publishing messages over a topic
    
     try{
+
         const client = new KafkaClient(kafkaConfig(server));
         const producer = new Producer(client);
 
