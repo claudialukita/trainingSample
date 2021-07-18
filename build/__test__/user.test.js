@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const instance = __importStar(require("../server"));
 const sequelize_mock_1 = __importDefault(require("sequelize-mock"));
 const songsService_1 = require("../modules/services/songsService");
+const kafkaService_1 = require("../modules/services/kafkaService");
 //---------------------------------------------------------//
 // const dataInputUser = {
 //   username: '1mockUsername',
@@ -51,6 +52,14 @@ const mockLoginData = {
     username: "mock username",
     password: "mock password"
 };
+const dataPublishJSONToKafka = {
+    topic: "songsTopic",
+    messages: {
+        singer: "mock singer",
+        song: "mock song",
+        user: "mock user"
+    }
+};
 const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VybmFtZSJ9.KLDiMFN3QkOAS8mprDbCoYu1t4yPcmvBZaqtQYti38I";
 jest.setTimeout(12000);
 let server;
@@ -62,19 +71,19 @@ afterAll((done) => {
     done();
 });
 //----------------------------------------------------------------------------------------------//
-// describe('server test', () => {
-//   test("GET returns 200", async () => {
-//     const response = await server.inject({
-//       method: 'GET',
-//       url: '/',
-//       headers: {
-//         'Authorization': token
-//       }
-//     });
-//     expect(response.statusCode).toBe(200);
-//     expect(response.payload).toBe('{"hello":"world"}');
-//   });
-// });
+describe('server test', () => {
+    test("GET returns 200", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield server.inject({
+            method: 'GET',
+            url: '/',
+            headers: {
+                'Authorization': token
+            }
+        });
+        expect(response.statusCode).toBe(200);
+        expect(response.payload).toBe('{"hello":"world"}');
+    }));
+});
 //----------------------------------------------------------------------------------------------//
 //----------------------------------------------------------------------------------------------//
 // describe('song: insert', () => {
@@ -120,6 +129,18 @@ describe('song: DB update', () => {
         const updateData = yield songsService.update(dataInputSong);
         expect(updateData).toEqual(1);
         expect(songsService.update).toHaveBeenCalledTimes(1);
+    }));
+});
+describe('song: DB delete', () => {
+    const dbMock = new sequelize_mock_1.default();
+    const songsService = new songsService_1.SongsService(dbMock);
+    const kafkaService = new kafkaService_1.KafkaService(dbMock);
+    // Spying on the actual methods of the class
+    jest.spyOn(songsService, 'destroy');
+    it('should delete data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const deleteData = yield songsService.destroy(dataInputSong);
+        expect(deleteData).toEqual(1);
+        expect(songsService.destroy).toHaveBeenCalledTimes(1);
     }));
 });
 describe('song: DB delete', () => {

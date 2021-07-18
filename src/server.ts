@@ -4,6 +4,7 @@ import fastifySwagger from "fastify-swagger";
 import AutoLoad from "fastify-autoload";
 import fastifyJwt from "fastify-jwt";
 import apmServer from 'elastic-apm-node';
+import fastifyShedule from 'fastify-schedule';
 
 import * as path from "path";
 import * as dotenv from 'dotenv';
@@ -81,7 +82,9 @@ export const createServer = () => new Promise((resolve, reject) => {
       exposeRoute: true
    });
 
-   server.register(fastifyJwt, { secret: secretKey })
+   server.register(fastifyJwt, { secret: secretKey });
+
+   server.register(fastifyShedule);
    
    server.register(AutoLoad, {
       dir: path.join(__dirname, 'modules/routes')

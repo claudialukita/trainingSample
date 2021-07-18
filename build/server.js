@@ -38,6 +38,7 @@ const fastify_swagger_1 = __importDefault(require("fastify-swagger"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
 const fastify_jwt_1 = __importDefault(require("fastify-jwt"));
 const elastic_apm_node_1 = __importDefault(require("elastic-apm-node"));
+const fastify_schedule_1 = __importDefault(require("fastify-schedule"));
 const path = __importStar(require("path"));
 const dotenv = __importStar(require("dotenv"));
 // import { swagger } from "./config/index";
@@ -106,6 +107,7 @@ const createServer = () => new Promise((resolve, reject) => {
         exposeRoute: true
     });
     server.register(fastify_jwt_1.default, { secret: secretKey });
+    server.register(fastify_schedule_1.default);
     server.register(fastify_autoload_1.default, {
         dir: path.join(__dirname, 'modules/routes')
     });

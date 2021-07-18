@@ -26,6 +26,7 @@
     "fastify-jwt": "^3.0.0",
     "fastify-plugin": "^3.0.0",
     "fastify-redis": "^4.3.1",
+    "fastify-schedule": "^1.0.0",
     "fastify-swagger": "^4.8.3",
     "kafka-node": "^5.0.0",
     "nodemon": "^2.0.12",
