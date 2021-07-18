@@ -20,7 +20,7 @@ class SongsService {
                     song: song
                 }
             }).then(data => {
-                resolve(data.song);
+                resolve(data.length);
             }).catch(err => {
                 reject(err);
             });
@@ -32,7 +32,7 @@ class SongsService {
                     song: song
                 }
             }).then(data => {
-                resolve(data.song);
+                resolve(data);
             }).catch(err => {
                 reject(err);
             });

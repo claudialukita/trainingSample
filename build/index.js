@@ -23,12 +23,13 @@ server_1.createServer()
     server.kafkaClient.on('error', (err) => {
         server.log.info('Server not connected to Kafka');
     });
-    //  const apmServerStatus = server.apm.isStarted();
-    //  if (apmServerStatus) {
-    //      server.log.info('Server connected to APM Server');
-    //  } else {
-    //      server.log.info('Server not connected to APM Server');
-    //  }
+    const apmServerStatus = server.apm.isStarted();
+    if (apmServerStatus) {
+        server.log.info('Server connected to APM Server');
+    }
+    else {
+        server.log.info('Server not connected to APM Server');
+    }
     //  const job = new JobUser(server.db);
     //  server.scheduler.addSimpleIntervalJob(job.jobInsertUser);
 }).catch(error => {

@@ -20,12 +20,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                     data //: { singer: data.singer, song: data.song, createdBy: data.createdBy }
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error in insert new record',
@@ -35,12 +35,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
@@ -56,12 +56,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                     data
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error updating record',
@@ -71,12 +71,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
@@ -92,12 +92,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                     data
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error deleting record',
@@ -106,12 +106,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
@@ -127,12 +127,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                     data
                 });
             }).catch(err => {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: err,
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: err,
+                });
                 return reply.code(400).send({
                     success: false,
                     message: 'Error in Inquiry',
@@ -141,12 +141,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            // server.apm.captureError({
-            //     method: request.routerMethod,
-            //     path: request.routerPath,
-            //     param: request.body,
-            //     error,
-            // })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }

@@ -24,6 +24,7 @@ const authPlugin = (server, opts, next) => {
 
               server.log.error(err)
             } else {
+
               getLoginRedis({username: decodedJwt.username, token: authHeader}, server).then(reply => {
                 console.log(reply);
               })
@@ -38,12 +39,12 @@ const authPlugin = (server, opts, next) => {
         }
       }
     } catch (err) {
-      // server.apm.captureError({
-      //   method: request.routerMethod,
-      //   path: request.routerPath,
-      //   param: request.body,
-      //   error: err,
-      // })
+      server.apm.captureError({
+        method: request.routerMethod,
+        path: request.routerPath,
+        param: request.body,
+        error: err,
+      })
       throw new Error('Failed to validate token');
     }
   });

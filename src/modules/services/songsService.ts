@@ -31,7 +31,7 @@ export class SongsService {
              song: song
          }
       }).then(data => {
-            resolve(data.song);
+            resolve(data.length);
          }).catch(err => {
             reject(err);
          });
@@ -45,7 +45,7 @@ export class SongsService {
             song: song
          }
       }).then(data => {
-         resolve(data.song);
+         resolve(data);
       }).catch(err => {
          reject(err);
       });
@@ -69,5 +69,4 @@ export class SongsService {
          reject(err);
       });
    });
-
 }

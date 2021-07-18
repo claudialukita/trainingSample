@@ -33,6 +33,9 @@ npm i pino-pretty
 npm i tedious
 npm i elastic-apm-node
 npm i kafka-node
+npm i --save-dev jest ts-jest @types/jest sequelize-mock
+npx ts-jest config:init
+npm i toad-scheduler
 ```
 For build the code
 ```sh

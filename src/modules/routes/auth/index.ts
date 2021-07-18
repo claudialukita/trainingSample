@@ -28,12 +28,12 @@ export default fp((server, opts, next) => {
                         });
                     })
             } else {
-                // server.apm.captureError({
-                //     method: request.routerMethod,
-                //     path: request.routerPath,
-                //     param: request.body,
-                //     error: 'Authentication failed! Please check the request',
-                // })
+                server.apm.captureError({
+                    method: request.routerMethod,
+                    path: request.routerPath,
+                    param: request.body,
+                    error: 'Authentication failed! Please check the request',
+                })
 
                 return reply.code(400).send({
                     success: false,

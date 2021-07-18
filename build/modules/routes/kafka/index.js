@@ -26,12 +26,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             });
         }
         catch (error) {
-            //    server.apm.captureError({
-            //        method: request.routerMethod,
-            //        path: request.routerPath,
-            //        param: request.body,
-            //        error,
-            //    })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             request.log.error(error);
             return reply.send(400);
         }
@@ -45,12 +45,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                 data: response
             });
         }).catch((error) => {
-            //   server.apm.captureError(JSON.stringify({
-            //       method: request.routerMethod,
-            //       path: request.routerPath,
-            //       param: request.body,
-            //       error,
-            //   }))
+            server.apm.captureError(JSON.stringify({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            }));
             return reply.code(400).send({
                 success: true,
                 message: 'Send message failed!',
@@ -67,12 +67,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                 data: response
             });
         }).catch((error) => {
-            //   server.apm.captureError(JSON.stringify({
-            //       method: request.routerMethod,
-            //       path: request.routerPath,
-            //       param: request.body,
-            //       error,
-            //   }))
+            server.apm.captureError(JSON.stringify({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            }));
             return reply.code(400).send({
                 success: true,
                 message: 'Send message failed!',
@@ -89,12 +89,12 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
                 data: response
             });
         }).catch((error) => {
-            //   server.apm.captureError({
-            //       method: request.routerMethod,
-            //       path: request.routerPath,
-            //       param: request.body,
-            //       error,
-            //   })
+            server.apm.captureError({
+                method: request.routerMethod,
+                path: request.routerPath,
+                param: request.body,
+                error,
+            });
             return reply.code(400).send({
                 success: true,
                 message: 'Create topic failed!',

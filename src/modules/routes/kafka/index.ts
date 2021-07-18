@@ -28,12 +28,12 @@ export default fp((server, opts, next) => {
            });
 
        } catch (error) {
-        //    server.apm.captureError({
-        //        method: request.routerMethod,
-        //        path: request.routerPath,
-        //        param: request.body,
-        //        error,
-        //    })
+           server.apm.captureError({
+               method: request.routerMethod,
+               path: request.routerPath,
+               param: request.body,
+               error,
+           })
 
            request.log.error(error);
            return reply.send(400);
@@ -51,12 +51,12 @@ export default fp((server, opts, next) => {
             data: response
         });
     }).catch((error) => {
-      //   server.apm.captureError(JSON.stringify({
-      //       method: request.routerMethod,
-      //       path: request.routerPath,
-      //       param: request.body,
-      //       error,
-      //   }))
+        server.apm.captureError(JSON.stringify({
+            method: request.routerMethod,
+            path: request.routerPath,
+            param: request.body,
+            error,
+        }))
 
         return reply.code(400).send({
             success: true,
@@ -77,12 +77,12 @@ export default fp((server, opts, next) => {
             data: response
         });
     }).catch((error) => {
-      //   server.apm.captureError(JSON.stringify({
-      //       method: request.routerMethod,
-      //       path: request.routerPath,
-      //       param: request.body,
-      //       error,
-      //   }))
+        server.apm.captureError(JSON.stringify({
+            method: request.routerMethod,
+            path: request.routerPath,
+            param: request.body,
+            error,
+        }))
 
         return reply.code(400).send({
             success: true,
@@ -103,13 +103,12 @@ export default fp((server, opts, next) => {
             data: response
         });
     }).catch((error) => {
-
-      //   server.apm.captureError({
-      //       method: request.routerMethod,
-      //       path: request.routerPath,
-      //       param: request.body,
-      //       error,
-      //   })
+        server.apm.captureError({
+            method: request.routerMethod,
+            path: request.routerPath,
+            param: request.body,
+            error,
+        })
 
         return reply.code(400).send({
             success: true,

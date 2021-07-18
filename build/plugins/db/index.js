@@ -69,7 +69,7 @@ const dbPlugin = ((server, opts, next) => __awaiter(void 0, void 0, void 0, func
                 message,
                 stack
             };
-            // server.apm.captureError(JSON.stringify(err));
+            server.apm.captureError(JSON.stringify(err));
             done();
         });
     });
@@ -80,10 +80,10 @@ const dbPlugin = ((server, opts, next) => __awaiter(void 0, void 0, void 0, func
         server.log.info('Database Connection has been established successfully.');
     }))
         .catch(err => {
-        // server.apm.err({
-        //     method: "Connecting to database",
-        //     error: err,
-        // })
+        server.apm.err({
+            method: "Connecting to database",
+            error: err,
+        });
         console.log(err);
         server.log.error('Unable to connect to the database:', err);
     });
