@@ -36,12 +36,15 @@ const fastify_1 = require("fastify");
 const fastify_blipp_1 = __importDefault(require("fastify-blipp"));
 const fastify_swagger_1 = __importDefault(require("fastify-swagger"));
 const fastify_autoload_1 = __importDefault(require("fastify-autoload"));
+const fastify_jwt_1 = __importDefault(require("fastify-jwt"));
 // import apmServer from 'elastic-apm-node';
 const path = __importStar(require("path"));
 const dotenv = __importStar(require("dotenv"));
 // import { swagger } from "./config/index";
 const db_1 = __importDefault(require("./plugins/db"));
 const kafka_1 = __importDefault(require("./plugins/kafka"));
+const redis_1 = __importDefault(require("./plugins/redis"));
+const auth_1 = __importDefault(require("./plugins/auth"));
 dotenv.config({
     path: path.resolve('.env'),
 });
@@ -54,6 +57,10 @@ const dbPort = process.env.DB_PORT;
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const kafkaHost = process.env.KAFKA_HOST;
+const redisPort = process.env.REDIS_PORT;
+const redistHost = process.env.REDIS_HOST;
+const expireToken = process.env.EXPIRE_TOKEN;
+const secretKey = process.env.SECRET;
 // var apm = apmServer.start({
 //    serviceName: 'apm-server-try',
 //    serverUrl: apmUrl,
@@ -98,13 +105,16 @@ const createServer = () => new Promise((resolve, reject) => {
         hideUntagged: true,
         exposeRoute: true
     });
+    server.register(fastify_jwt_1.default, { secret: secretKey });
     server.register(fastify_autoload_1.default, {
         dir: path.join(__dirname, 'modules/routes')
     });
     // server.decorate('apm', apm);
-    server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost });
+    server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost, redisPort, redistHost, expireToken });
     server.register(db_1.default);
     server.register(kafka_1.default);
+    server.register(redis_1.default);
+    server.register(auth_1.default);
     //    server.addHook('onRequest', async (request, reply, error) => {
     //       apm.setTransactionName(request.method + ' ' + request.url);
     //   });

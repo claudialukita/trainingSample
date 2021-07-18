@@ -2,6 +2,7 @@ import { fastify } from 'fastify';
 import fastifyBlipp from "fastify-blipp";
 import fastifySwagger from "fastify-swagger";
 import AutoLoad from "fastify-autoload";
+import fastifyJwt from "fastify-jwt";
 // import apmServer from 'elastic-apm-node';
 
 import * as path from "path";
@@ -10,6 +11,8 @@ import * as dotenv from 'dotenv';
 // import { swagger } from "./config/index";
 import dbPlugin from "./plugins/db";
 import kafkaPlugin from "./plugins/kafka";
+import redisPlugin from "./plugins/redis";
+import authPlugin from "./plugins/auth";
 
 dotenv.config({
    path: path.resolve('.env'),
@@ -25,6 +28,10 @@ const dbPort: any = process.env.DB_PORT;
 const dbUsername: string = process.env.DB_USERNAME;
 const dbPassword: string = process.env.DB_PASSWORD;
 const kafkaHost: string = process.env.KAFKA_HOST;
+const redisPort: any = process.env.REDIS_PORT;
+const redistHost: string = process.env.REDIS_HOST;
+const expireToken: string = process.env.EXPIRE_TOKEN;
+const secretKey: string = process.env.SECRET
 
 // var apm = apmServer.start({
 //    serviceName: 'apm-server-try',
@@ -73,6 +80,8 @@ export const createServer = () => new Promise((resolve, reject) => {
       hideUntagged: true,
       exposeRoute: true
    });
+
+   server.register(fastifyJwt, { secret: secretKey })
    
    server.register(AutoLoad, {
       dir: path.join(__dirname, 'modules/routes')
@@ -80,10 +89,13 @@ export const createServer = () => new Promise((resolve, reject) => {
 
    // server.decorate('apm', apm);
 
-   server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost });
+   server.decorate('conf', { port, dbDialect, db, dbHost, dbPort, dbUsername, dbPassword, kafkaHost, redisPort, redistHost, expireToken});
 
    server.register(dbPlugin);
    server.register(kafkaPlugin);
+   server.register(redisPlugin);
+   server.register(authPlugin);
+
 
 //    server.addHook('onRequest', async (request, reply, error) => {
 //       apm.setTransactionName(request.method + ' ' + request.url);

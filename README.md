@@ -17,6 +17,7 @@ Dillinger uses a number of open source projects to work properly:
 - [NodeJS](https://nodejs.org/en/) - JavaScript runtime environment
 - [OffsetExplorer](https://www.kafkatool.com/download.html) - Kafka tool
 - [DBeaver](https://dbeaver.io/download/) - Database tool
+- [RedisInsight](https://redislabs.com/redis-enterprise/redis-insight/#insight-form) - Redis tool
 
 ## Installation
 Install the library

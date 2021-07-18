@@ -18,17 +18,14 @@ class KafkaService {
         this.subscribeTopicSongs = () => __awaiter(this, void 0, void 0, function* () {
             consumer_1.kafkaSubscribe(this.server, 'songsTopic', (messages) => {
                 this.server.log.info(messages);
-                console.log(messages);
             });
         });
         this.subscribeTopicSaveDb = () => __awaiter(this, void 0, void 0, function* () {
             consumer_1.kafkaSubscribe(this.server, 'songsTopic', (messages) => {
-                this.server.log.info(messages);
+                // this.server.log.info(messages);
                 const myobj = JSON.parse(messages.value.toString());
                 const songsService = new songsService_1.SongsService(this.server.db);
                 songsService.specificSelect(myobj);
-                console.log("Successful");
-                // songsService.insert(myobj);
             });
         });
         this.publishToTopic = (param) => new Promise((resolve, reject) => {

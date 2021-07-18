@@ -7,6 +7,15 @@ createServer()
 .then((server: any) => {
     server.log.info('Server started.');
 
+    server.redis.set('test', 'Connected', "EX", server.conf.expireToken, (err, val) => {
+        if (err) {
+            server.log.info('Failed to establish Redis Connection.');
+            server.log.error(JSON.stringify(err));
+        } else {
+            server.log.info('Redis Connection has been established successfully.');
+        }
+    });
+
     server.kafkaClient.on('ready', () => {
         server.log.info('Kafka Client Connection has been established successfully.');
 
