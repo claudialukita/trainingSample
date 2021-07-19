@@ -1,6 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { createServer } from './server';
 import { KafkaService} from './modules/services/kafkaService';
+import { JobUser } from "./modules/services/jobSong";
+import { JobKafka } from "./modules/services/jobKafka";
 
   
 createServer()
@@ -35,8 +37,13 @@ createServer()
         server.log.info('Server not connected to APM Server');
     }
 
-   //  const job = new JobUser(server.db);
-   //  server.scheduler.addSimpleIntervalJob(job.jobInsertUser);
+    //db scheduler
+    // const jobDB = new JobUser(server.db);
+    // server.scheduler.addSimpleIntervalJob(jobDB.jobInsertSong);
+
+    //kafka scheduler
+    const jobKafka = new JobKafka(server);
+    server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
 
 }).catch(error => {
     // do something

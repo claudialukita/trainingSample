@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
 const kafkaService_1 = require("./modules/services/kafkaService");
+const jobKafka_1 = require("./modules/services/jobKafka");
 server_1.createServer()
     .then((server) => {
     server.log.info('Server started.');
@@ -30,8 +31,12 @@ server_1.createServer()
     else {
         server.log.info('Server not connected to APM Server');
     }
-    //  const job = new JobUser(server.db);
-    //  server.scheduler.addSimpleIntervalJob(job.jobInsertUser);
+    //db scheduler
+    // const jobDB = new JobUser(server.db);
+    // server.scheduler.addSimpleIntervalJob(jobDB.jobInsertSong);
+    //kafka scheduler
+    const jobKafka = new jobKafka_1.JobKafka(server);
+    server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
 }).catch(error => {
     // do something
     console.log(error);

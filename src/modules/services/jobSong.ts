@@ -1,20 +1,24 @@
 import fp from 'fastify-plugin';
 import { SimpleIntervalJob, AsyncTask, Task } from 'toad-scheduler'
 
-import { SongsService } from '../../services/songsService';
+import { SongsService } from './songsService';
 
 // import { JobTO, JobMonitoringTO } from './schema';
 // import { getTodayDateAsString } from '../../../utils/DateUtils';
 
 let counter = 0;
 
-export default fp(async (server: any, options) => {
+export class JobUser {
+   db: any;
+   constructor(db){
+      this.db = db;
+   }
 
     // must use promise
-    const taskDummy1 = new AsyncTask('jobDummyInsertSong', () => new Promise((resolve, reject) => {
-        console.log(`----------------Start Job Index----------------`);
+    taskDummy1 = new AsyncTask('jobDummyInsertSong', () => new Promise((resolve, reject) => {
+        console.log(`----------------Start Job----------------`);
         try {
-           const songsService = new SongsService(server.db);
+           const songsService = new SongsService(this.db);
             console.log('JobRunning1');
             counter++
 
@@ -32,16 +36,16 @@ export default fp(async (server: any, options) => {
 
             resolve();
         } catch (error) {
-            console.error('JobRunning1 Index - error');
+            console.error('JobRunning1 - error');
             reject();
         } finally {
-            console.log(`----------------End of Job Index----------------`);
+            console.log(`----------------End of Job----------------`);
         }
     }), err => {
         console.log('JobRunning1 - error', err);
     });
-    const job1 = new SimpleIntervalJob({ seconds: 15, runImmediately: true}, taskDummy1, 'jobDummyInsertSong')
-    // server.scheduler.addSimpleIntervalJob(job1);
+    jobInsertSong = new SimpleIntervalJob({ seconds: 15, runImmediately: true}, this.taskDummy1, 'jobDummyInsertSong')
+   //  server.scheduler.addSimpleIntervalJob(job1);
 
    //  const taskDummy2 = new AsyncTask('jobDummyId2', () => new Promise((resolve, reject) => {
    //      console.log(`----------------Start Job ${getTodayDateAsString()}----------------`);
@@ -108,4 +112,4 @@ export default fp(async (server: any, options) => {
     //     const result = server.scheduler.getStatus();
     //     reply.send(result)
     // });
-});
+}

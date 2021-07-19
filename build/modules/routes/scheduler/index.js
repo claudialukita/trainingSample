@@ -21,7 +21,7 @@ let counter = 0;
 exports.default = fastify_plugin_1.default((server, options) => __awaiter(void 0, void 0, void 0, function* () {
     // must use promise
     const taskDummy1 = new toad_scheduler_1.AsyncTask('jobDummyInsertSong', () => new Promise((resolve, reject) => {
-        console.log(`----------------Start Job----------------`);
+        console.log(`----------------Start Job Index----------------`);
         try {
             const songsService = new songsService_1.SongsService(server.db);
             console.log('JobRunning1');
@@ -39,17 +39,17 @@ exports.default = fastify_plugin_1.default((server, options) => __awaiter(void 0
             resolve();
         }
         catch (error) {
-            console.error('JobRunning1 - error');
+            console.error('JobRunning1 Index - error');
             reject();
         }
         finally {
-            console.log(`----------------End of Job----------------`);
+            console.log(`----------------End of Job Index----------------`);
         }
     }), err => {
         console.log('JobRunning1 - error', err);
     });
     const job1 = new toad_scheduler_1.SimpleIntervalJob({ seconds: 15, runImmediately: true }, taskDummy1, 'jobDummyInsertSong');
-    server.scheduler.addSimpleIntervalJob(job1);
+    // server.scheduler.addSimpleIntervalJob(job1);
     //  const taskDummy2 = new AsyncTask('jobDummyId2', () => new Promise((resolve, reject) => {
     //      console.log(`----------------Start Job ${getTodayDateAsString()}----------------`);
     //      try {

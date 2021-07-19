@@ -36,7 +36,7 @@ exports.default = fastify_plugin_1.default((server, opts, next) => {
             return reply.send(400);
         }
     });
-    server.post("/kafka/publish", { schema: schema_1.PublishKafkaTO }, (request, reply) => {
+    server.post("/kafka/publish", { schema: schema_1.PublishJSONKafkaTO }, (request, reply) => {
         const kafkaService = new kafkaService_1.KafkaService(server);
         kafkaService.publishToTopic(request.body).then((response) => {
             return reply.code(200).send({

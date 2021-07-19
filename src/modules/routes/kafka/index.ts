@@ -40,7 +40,7 @@ export default fp((server, opts, next) => {
        }
    });
 
-  server.post("/kafka/publish", { schema: PublishKafkaTO }, (request, reply) => {
+  server.post("/kafka/publish", { schema: PublishJSONKafkaTO }, (request, reply) => {
 
     const kafkaService = new KafkaService(server);
 
