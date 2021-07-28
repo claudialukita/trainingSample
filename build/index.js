@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("./server");
 const kafkaService_1 = require("./modules/services/kafkaService");
-const jobKafka_1 = require("./modules/services/jobKafka");
 server_1.createServer()
     .then((server) => {
     server.log.info('Server started.');
@@ -35,8 +34,8 @@ server_1.createServer()
     // const jobDB = new JobUser(server.db);
     // server.scheduler.addSimpleIntervalJob(jobDB.jobInsertSong);
     //kafka scheduler
-    const jobKafka = new jobKafka_1.JobKafka(server);
-    server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
+    // const jobKafka = new JobKafka(server);
+    // server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
 }).catch(error => {
     // do something
     console.log(error);

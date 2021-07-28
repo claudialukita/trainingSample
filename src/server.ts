@@ -19,6 +19,7 @@ dotenv.config({
    path: path.resolve('.env'),
 });
 
+const isDocker: any = process.env.IS_DOCKER
 const port: any = process.env.PORT;
 
 const apmUrl: string = process.env.APM_URL;
@@ -127,7 +128,12 @@ export const createServer = () => new Promise((resolve, reject) => {
 
    const start = async () => {
       try{
-         await server.listen(port)
+         if(isDocker){
+            await server.listen(port, '0.0.0.0');
+            server.log.info('server running on docker');
+         } else {
+            await server.listen(port)
+         }
          server.blipp();
          server.log.info(`server listening on ${JSON.stringify(server.server.address())}`);
          resolve(server);

@@ -31,7 +31,7 @@ export class JobKafka{
            }).catch(err => {
               reject(err);
            })
-
+           
           resolve();
       } catch (error) {
          this.server.apm.captureError({

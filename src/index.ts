@@ -42,8 +42,8 @@ createServer()
     // server.scheduler.addSimpleIntervalJob(jobDB.jobInsertSong);
 
     //kafka scheduler
-    const jobKafka = new JobKafka(server);
-    server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
+    // const jobKafka = new JobKafka(server);
+    // server.scheduler.addSimpleIntervalJob(jobKafka.jobPublishMsgToKafka);
 
 }).catch(error => {
     // do something
